@@ -5,7 +5,7 @@
 #include <SDL_image.h>
 
 CGame::CGame(){
-	estado = ESTADO_INICIANDO; //act2 actualizado
+	estado = ESTADO_INICIANDO; 
 	atexit(SDL_Quit);
 }
 
