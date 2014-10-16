@@ -6,7 +6,11 @@
 #include <SDL_image.h>
 
 CGame::CGame(){
+<<<<<<< HEAD
 	estado = ESTADO_INICIANDO;
+=======
+	estado = ESTADO_INICIANDO; 
+>>>>>>> origin/master
 	atexit(SDL_Quit);
 }
 
