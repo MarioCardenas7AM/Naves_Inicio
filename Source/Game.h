@@ -1,4 +1,5 @@
 #include <SDL.h>;
+#include "nave.h"
 class CGame
 {
 public:
@@ -16,8 +17,12 @@ public:
 	void Finalize();
 
 private:
+
 	void Iniciando();
+
+	Uint8 *keys;
+    SDL_Event  event;
 	SDL_Surface *screen;
-	SDL_Surface *nave;
+	nave *nave1;
 	Estado estado;
 };
