@@ -7,11 +7,15 @@
 #include <cstdio>
 
 CGame::CGame(){
+<<<<<<< HEAD
 //<<<<<<< HEAD
 	estado = ESTADO_INICIANDO;
 //=======
 	estadofin = ESTADO_FINALIZANDO;
 //>>>>>>> origin/master
+=======
+	estado = ESTADO_INICIANDO;
+>>>>>>> origin/master
 	atexit(SDL_Quit);
 }
 
