@@ -4,13 +4,14 @@
 #include "Config.h"
 #include <SDL.h>
 #include <SDL_image.h>
+#include <cstdio>
 
 CGame::CGame(){
-<<<<<<< HEAD
+//<<<<<<< HEAD
 	estado = ESTADO_INICIANDO;
-=======
-	estado = ESTADO_INICIANDO; 
->>>>>>> origin/master
+//=======
+	estadofin = ESTADO_FINALIZANDO;
+//>>>>>>> origin/master
 	atexit(SDL_Quit);
 }
 
@@ -37,19 +38,23 @@ void CGame::Iniciando()
 
 	SDL_WM_SetCaption("Mi primer Juego", NULL);
 	atexit(SDL_Quit);
-	nave1 = new nave(screen,"../Data/Minave.bmp");
+	nave1 = new nave(screen,"../Data/Minave.bmp", (WIDTH_SCREEN/2)/*-(sprite->WidthModule(0)/2)*/ ,(HEIGHT_SCREEN - 80) /*- (sprite->HeighModule(0))*/);
+	enemigo = new nave(screen,"../Data/enemigo.bmp",0,0);
+	enemigo->SetAutoMovimiento(true);
+	
 	//nave->CargarImagen("../Data/MiNave.bmp");
 }
 bool CGame::Start()
 {
 	// Esta variable nos ayudara a controlar la salida del juego...
 	int salirJuego = false;
-          
+          char s;
 	while (salirJuego == false){
             
 		//Maquina de estados
 		switch(estado){
 		case Estado::ESTADO_INICIANDO:
+			printf(" Estado Iniciando");
 			Iniciando();
 			
 				//nave = IMG_LoadJPG_RW(SDL_RWFromFile("../Data/cuadro.jpg", "rb"));
@@ -70,8 +75,27 @@ bool CGame::Start()
 			estado = Estado::ESTADO_MENU;
 			break;
 		case Estado::ESTADO_MENU:
+			printf("\n Estado Menu");
 			//nave->PintarModulo(0,0,0,64,64);
 			//nave->PintarModulo(0,0,0);
+			
+			estado = Estado::ESTADO_JUGANDO;
+			break;
+		case Estado::ESTADO_JUGANDO:	
+			if (estadofin == ESTADO_JUGANDO)
+					{
+						estado = ESTADO_FINALIZANDO;
+				
+						estadofin = ESTADO_FINALIZANDO;
+
+
+					}
+					 if (estado==ESTADO_JUGANDO)
+					{
+					
+						estado = ESTADO_TERMINANDO;
+					}
+			enemigo->Actualizar();
 			SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format,0,0,0));
 
 			keys = SDL_GetKeyState(NULL);
@@ -83,17 +107,29 @@ bool CGame::Start()
 			nave1->Mover(-1);
 			}
 			nave1->Pintar();
+			enemigo->Pintar();
 			
-			break;
-		case Estado::ESTADO_JUGANDO:	
+			
+
+	//estado = ESTADO_TERMINANDO;
 			break;
 		case Estado::ESTADO_TERMINANDO: 
-				salirJuego = true;
+			printf("\n Estado Terminando");
+
+			
+				salirJuego = false;
+				
+				estado = Estado::ESTADO_FINALIZANDO;
 				break;
 		case Estado::ESTADO_FINALIZANDO:
+			printf("\n Estado Finalizando");
 			delete(nave1);
 			SDL_FreeSurface(screen);
 			SDL_Quit();
+			estado = ESTADO_FINALIZANDO;
+			std::puts("\n Presiona el recuadro x para salir");
+
+			std::getchar();
 			break;
 		};
 

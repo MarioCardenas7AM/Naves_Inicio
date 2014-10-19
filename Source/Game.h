@@ -24,5 +24,7 @@ private:
     SDL_Event  event;
 	SDL_Surface *screen;
 	nave *nave1;
+	nave *enemigo;
 	Estado estado;
+	Estado estadofin;
 };
