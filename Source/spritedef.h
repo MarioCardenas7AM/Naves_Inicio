@@ -2,14 +2,22 @@
 #define __SPRITEDEF_H__
 
 
-class spritedef{
+class SpriteDef{
 public:
-	struct Modulos{
-		int id, x, y, w, h;
+
+	struct Modulos
+	{
+		int id;
+		int x;
+		int y;
+		int w;
+		int h;
 	};
 
-	Modulos modulos [1];
-	spritedef(); 
+	Modulos modulos [9];
+	SpriteDef();
 
 };
+
+
 #endif

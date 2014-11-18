@@ -5,11 +5,14 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-
 CGame::CGame()
 {
+<<<<<<< HEAD
 
 	tiempoFrame = 0;
+=======
+	tiempoFrameInicial=0;
+>>>>>>> origin/master
 	estado = ESTADO_INICIANDO;
 	Iniciando();
 
@@ -32,22 +35,22 @@ void CGame::Iniciando(){
 
 	atexit(SDL_Quit);
 
-	nave = new Nave(screen,"../Data/MiNave.bmp",(WIDTH_SCREEN/2),(HEIGHT_SCREEN-80),0);
-	
-	menu = new Nave(screen, "../Data/menu.bmp", 0, 0, 1);
-	texto = new Nave(screen, "../Data/texto.bmp", 50, 59, -1);
-
+	nave = new Nave(screen,"../Data/MiNave.bmp",(WIDTH_SCREEN/2)/*-(sprite->WidthModule(0)/2))*/,(HEIGHT_SCREEN-80)/*-(sprite->HeightModule(0)*/);
 //	enemigo = new Nave(screen,"../Data/enemigo.bmp",0,0);
 
 	for (int i = 0; i < 10; i++)
 	{
-		enemigoArreglo[i] = new Nave(screen,"../Data/enemigo.bmp",0,0,2);
+		enemigoArreglo[i] = new Nave(screen,"../Data/enemigo.bmp",i*60,0);
 		enemigoArreglo[i]->SetAutoMovimiento(false);
 		enemigoArreglo[i]->SetPasoLimite(4);
 	}
+<<<<<<< HEAD
 	tick = 0;
-	opcionSeleccionada = MODULO_TEXTOS_MENU_OPCION1;
 
+=======
+
+	tick=0;
+>>>>>>> origin/master
 //	enemigo->SetAutoMovimiento(false);
 //	enemigo->SetPasoLimite(4);
 
@@ -75,16 +78,23 @@ bool CGame::Start()
 		//Maquina de estados
 		switch(estado){
 		case Estado::ESTADO_INICIANDO:
-			
+			printf("1. ESTADO_INICIANDO");
 			Iniciando();
 			estado =ESTADO_MENU;
 			break;
 		case Estado ::ESTADO_MENU:
-			menu->Pintar();
-			texto->Pintar(MODULO_TEXTOS_TITULO, 100,50);
-			texto->Pintar(MODULO_TEXTOS_NOMBRE, 20, 300);
-			
-			Menu();
+
+			if(x==0){
+			printf("\n2. ESTADO_MENU");
+			estado=ESTADO_JUGANDO;
+			x=1;
+			}
+			else
+			{
+				printf("\n2. ESTADO_MENU");
+				estado=ESTADO_FINALIZANDO;
+				
+			}
 			break;
 		case Estado ::ESTADO_JUGANDO:
 	//		enemigo->Actualizar();
@@ -98,6 +108,7 @@ bool CGame::Start()
 			if(keys[SDLK_RIGHT])
 			{ 
 				if(!EsLimitePantalla(nave,BORDE_DERECHO))
+<<<<<<< HEAD
 				nave->Mover(10);
 			}//Los 3 casos siguientes son el primero aplicando a las demas direcciones
 			if(keys[SDLK_LEFT])
@@ -111,6 +122,21 @@ bool CGame::Start()
 			if(keys[SDLK_DOWN])
 			{
 				nave->Mover2(10);
+=======
+				nave->Mover(8);
+			}//Los 3 casos siguientes son el primero aplicando a las demas direcciones
+			if(keys[SDLK_LEFT])
+			{
+				nave->Mover(-8);
+			}
+			if(keys[SDLK_UP])
+			{
+				nave->Mover2(-8);
+			}
+			if(keys[SDLK_DOWN])
+			{
+				nave->Mover2(8);
+>>>>>>> origin/master
 			}
 
 			
@@ -149,6 +175,7 @@ bool CGame::Start()
 			if(event.type==SDL_KEYDOWN){}
 		}
 		SDL_Flip(screen);//Este codigo esta provicionalmente aqui
+<<<<<<< HEAD
 		
 		int tiempoFrameFinal = SDL_GetTicks();
 		while (tiempoFrameFinal < (tiempoFrame + FPS_DELAY)){
@@ -160,6 +187,19 @@ bool CGame::Start()
 		tick++;
 
 
+=======
+		//calculando FPS
+		tiempoFrameFinal=SDL_GetTicks();
+		while(tiempoFrameFinal<(tiempoFrameInicial+FPS_DELAY))
+			{
+				tiempoFrameFinal=SDL_GetTicks();
+				SDL_Delay(1);
+			}
+
+		printf("Frames:%d Tiempo:%d Tiempo promedio:%f Tiempo por frame:%d FPS:%f\n",tick,SDL_GetTicks(),(float)SDL_GetTicks()/(float)tick,tiempoFrameFinal- tiempoFrameInicial,1000.0f/(float)(tiempoFrameFinal-tiempoFrameInicial));
+		tiempoFrameInicial=tiempoFrameFinal;
+		tick++;
+>>>>>>> origin/master
 	}
 	return true;
 }
@@ -218,7 +258,11 @@ void CGame::MoverEnemigo()
 		if(enemigoArreglo[i]->ObtenerPasoActual()==0)
 			if(!EsLimitePantalla(enemigoArreglo[i],BORDE_DERECHO))
 			{
+<<<<<<< HEAD
 			enemigoArreglo[i]->Mover(20);//Derecha
+=======
+			enemigoArreglo[i]->Mover(30);//Derecha
+>>>>>>> origin/master
 			}
 			else
 			{
@@ -227,14 +271,22 @@ void CGame::MoverEnemigo()
 			}
 	if(enemigoArreglo[i]->ObtenerPasoActual()==1)
 		if(!EsLimitePantalla(enemigoArreglo[i],BORDE_INFERIOR))
+<<<<<<< HEAD
 			{enemigoArreglo[i]->Mover2(20);}
+=======
+			{enemigoArreglo[i]->Mover2(30);}
+>>>>>>> origin/master
 		else
 		{
 			enemigoArreglo[i]->IncrementarPasoAcutal();
 		}
 	if(enemigoArreglo[i]->ObtenerPasoActual()==2)
 		if(!EsLimitePantalla(enemigoArreglo[i],BORDE_IZQUIERDO))
+<<<<<<< HEAD
 		{	enemigoArreglo[i]->Mover(-20);}
+=======
+		{	enemigoArreglo[i]->Mover(-30);}
+>>>>>>> origin/master
 		else
 		{
 			enemigoArreglo[i]->IncrementarPasoAcutal();
@@ -243,27 +295,14 @@ void CGame::MoverEnemigo()
 		}
 	if(enemigoArreglo[i]->ObtenerPasoActual()==3)
 		if(!EsLimitePantalla(enemigoArreglo[i],BORDE_SUPERIOR))
+<<<<<<< HEAD
 		{	enemigoArreglo[i]->Mover2(-20);}
+=======
+		{	enemigoArreglo[i]->Mover2(-30);}
+>>>>>>> origin/master
 		else
 		{
 			enemigoArreglo[i]->IncrementarPasoAcutal();
 		}
-
-
 }
-}
-void CGame::Menu()
-{
-	for (int i = MODULO_TEXTOS_MENU_OPCION1, j = 0; i <= MODULO_TEXTOS_MENU_OPCION2; i++, j++)
-	{
-		if (i == opcionSeleccionada)
-		{
-			texto->Pintar(i + 2, 100, 130 + (j * 50));
-		}
-		else
-		{
-			texto->Pintar(i, 100, 130 + (j * 50));
-		}
-		
-	}
 }

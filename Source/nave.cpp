@@ -1,30 +1,90 @@
-#include "nave.h"
-#include "Config.h"
+#include "Nave.h"
+#include "Header.h"
 
-nave::nave(SDL_Surface * screen, char * rutaImagen, int x, int y){
-	sprite1 = new sprite(screen);
-	sprite1->CargarImagen(rutaImagen);
-	
-	this->x = x;
-	this->y = y;
-	autoMovimiento = false;
+Nave::Nave(SDL_Surface * screen,char * rutaImagen,int x, int y, int module)
+{
+	this->module = module;
+	sprite = new Sprite(screen);
+	sprite->CargarImagen(rutaImagen);
+	w = sprite->WidthModule(this->module);
+	h = sprite->HeightModule(this->module);
+	this->x=x;
+	this->y=y;
+	autoMovimiento=false;
+	pasoActual=0;
+	pasoLimite=-1;
 }
 
-void nave::SetAutoMovimiento(bool automovimiento){
-	this->autoMovimiento = automovimiento;
+void Nave::SetAutoMovimiento(bool autoMovimiento){
+	this->autoMovimiento= autoMovimiento;
 }
-void nave::Actualizar(){
-	if(autoMovimiento){
-		 Mover(1);
+
+void Nave::Actualizar(){
+	if(autoMovimiento)
+	{
+Mover(1);
+	}
+if(pasoLimite>0)
+{
+	//pasoActual++;
+if(pasoActual>=pasoLimite)
+	pasoActual = 0;
 	}
 }
-void nave::Pintar(){
-   sprite1->PintarModulo(0,x,y);
+
+void Nave:: Pintar()
+{
+	sprite->PintarModulo(module,x,y);
 }
 
-void nave::Mover(int posicion){
-	x += posicion;
+void Nave::Pintar(int module, int x, int y)
+{
+	sprite->PintarModulo(module, x, y);
 }
 
+void Nave::Mover(int posicion){
+	x+=posicion;
+}
+void Nave::Mover2(int posicion){
+	y+=posicion;
+}
 
+int Nave::ObtenerX()
+{
+	return x;
+}
 
+int Nave::ObtenerY()
+{
+	return y;
+}
+
+int Nave::ObtenerW()
+{
+	return w;
+}
+
+int Nave::ObtenerH()
+{
+	return h;
+}
+
+void Nave::SetPasoLimite(int pasos)
+{
+	this->pasoLimite=pasos;
+}
+
+int Nave::ObtenerPasoActual()
+{
+	return pasoActual;
+}
+
+void Nave::IncrementarPasoAcutal()
+{
+	pasoActual++;
+}
+
+bool Nave::EstaColicionando(Nave * b)
+{
+	return false;
+}
