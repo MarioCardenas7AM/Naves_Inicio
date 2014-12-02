@@ -5,11 +5,9 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-
 CGame::CGame()
 {
-
-	tiempoFrame = 0;
+	tiempoFrameInicial=0;
 	estado = ESTADO_INICIANDO;
 	Iniciando();
 
@@ -32,21 +30,23 @@ void CGame::Iniciando(){
 
 	atexit(SDL_Quit);
 
-	nave = new Nave(screen,"../Data/MiNave.bmp",(WIDTH_SCREEN/2),(HEIGHT_SCREEN-80),0);
+	fondo=new Objeto(screen,"../Data/fondo.bmp",0,0,1);
+	nave = new Nave(screen,"../Data/MiNave.bmp",(WIDTH_SCREEN/2),(HEIGHT_SCREEN-80),MODULO_MINAVE_NAVE);
+	menu= new Objeto(screen,"../Data/menu.bmp",0,0,MODULO_MENU_FONDO);
+	textos=new Objeto(screen,"../Data/textos.bmp",0,0,-1);
 	
-	menu = new Nave(screen, "../Data/menu.bmp", 0, 0, 1);
-	texto = new Nave(screen, "../Data/texto.bmp", 50, 59, -1);
-
-//	enemigo = new Nave(screen,"../Data/enemigo.bmp",0,0);
+	
+//	enemigo = new Objeto(screen,"../Data/enemigo.bmp",0,0);
 
 	for (int i = 0; i < 10; i++)
 	{
-		enemigoArreglo[i] = new Nave(screen,"../Data/enemigo.bmp",0,0,2);
+		enemigoArreglo[i] = new Objeto(screen,"../Data/enemigo.bmp",i*60,0,MODULO_ENEMIGO_NAVE);
 		enemigoArreglo[i]->SetAutoMovimiento(false);
 		enemigoArreglo[i]->SetPasoLimite(4);
 	}
-	tick = 0;
-	opcionSeleccionada = MODULO_TEXTOS_MENU_OPCION1;
+
+	tick=0;
+	
 
 //	enemigo->SetAutoMovimiento(false);
 //	enemigo->SetPasoLimite(4);
@@ -57,89 +57,80 @@ void CGame::Finalize(){
 	delete(nave);
 	//delete(keys);
 	//delete(enemigo);
-	delete *enemigoArreglo;
+	//delete *enemigoArreglo;
 	SDL_FreeSurface(screen);
 	SDL_Quit();
 }
 
 bool CGame::Start()
 {
-
 	// Esta variable nos ayudara a controlar la salida del juego...
-	int salirJuego = false;
-
-     int x=0;     
+	int salirJuego = false;     
 
 	while (salirJuego == false){
-
 		//Maquina de estados
 		switch(estado){
 		case Estado::ESTADO_INICIANDO:
-			
 			Iniciando();
-			estado =ESTADO_MENU;
+			//estado =ESTADO_JUGANDO;
+			estado=ESTADO_MENU;
 			break;
 		case Estado ::ESTADO_MENU:
 			menu->Pintar();
-			texto->Pintar(MODULO_TEXTOS_TITULO, 100,50);
-			texto->Pintar(MODULO_TEXTOS_NOMBRE, 20, 300);
-			
+			textos->Pintar(MODULO_TEXTOS_TITULO,150,50);
+			textos->Pintar(MODULO_TEXTOS_NOMBRE,0,450);
 			Menu();
+		//estado=ESTADO_JUGANDO;
 			break;
 		case Estado ::ESTADO_JUGANDO:
-	//		enemigo->Actualizar();
+			 
+		//enemigo->Actualizar();
 			for (int i = 0; i < 10; i++)
 			{
 				enemigoArreglo[i]->Actualizar();
 			}
 			MoverEnemigo();
-			SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,0,0));  //limpia la imagen 
+			 fondo->Pintar();
+			//SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,0,0));  //limpia la imagen 
+
 			keys= SDL_GetKeyState(NULL);
 			if(keys[SDLK_RIGHT])
 			{ 
-				if(!EsLimitePantalla(nave,BORDE_DERECHO))
-				nave->Mover(10);
+				if(!EsLimitePantalla(nave->GetNaveObjeto(),BORDE_DERECHO))
+					nave->MoverDerecha();
 			}//Los 3 casos siguientes son el primero aplicando a las demas direcciones
 			if(keys[SDLK_LEFT])
 			{
-				nave->Mover(-10);
+				if(!EsLimitePantalla(nave->GetNaveObjeto(),BORDE_IZQUIERDO))
+					nave->MoverIzquierda();
 			}
 			if(keys[SDLK_UP])
 			{
-				nave->Mover2(-10);
+				if(!EsLimitePantalla(nave->GetNaveObjeto(),BORDE_SUPERIOR))
+					nave->MoverArriba();
 			}
 			if(keys[SDLK_DOWN])
 			{
-				nave->Mover2(10);
+				if(!EsLimitePantalla(nave->GetNaveObjeto(),BORDE_INFERIOR))
+				nave->MoverAbajo();
 			}
 
-			
+			if (keys[SDLK_SPACE])
+			{
+				nave->Disparar();
+			}
+			   
 				nave->Pintar();
 		//		enemigo->Pintar();
 				for(int i=0;i<10;i++)
 				{
 					enemigoArreglo[i]->Pintar();
 				}
-				if(keys[SDLK_SPACE])
-			{
-				printf("\n3. ESTADO_JUGANDO");
-				estado=ESTADO_TERMINANDO;
-			}
-			
-
 			//nave->Pintar();
 			break;
-		
-
-			
 		case Estado ::ESTADO_TERMINANDO:
-			printf("\n4. ESTADO_TERMINANDO");
-			estado=ESTADO_MENU;
-			;
 			break;
 		case Estado ::ESTADO_FINALIZANDO:
-			printf("\n5. ESTADO_FINALIZADO");
-			getchar();
 			salirJuego = true;
 			break;
 		};
@@ -149,22 +140,22 @@ bool CGame::Start()
 			if(event.type==SDL_KEYDOWN){}
 		}
 		SDL_Flip(screen);//Este codigo esta provicionalmente aqui
-		
-		int tiempoFrameFinal = SDL_GetTicks();
-		while (tiempoFrameFinal < (tiempoFrame + FPS_DELAY)){
-			tiempoFrameFinal = SDL_GetTicks();
-			SDL_Delay(1);
-		}
-		printf("Frames:%d Tiempo:%d Tiempo promedio:%f Tiempo por frame:%d FPS:%f\n", tick, SDL_GetTicks(), (float)SDL_GetTicks() / (float)tick, tiempoFrameFinal - tiempoFrame, 1000.0f / (float)(tiempoFrameFinal - tiempoFrame));
-		tiempoFrame = tiempoFrameFinal;
+		//calculando FPS
+		tiempoFrameFinal=SDL_GetTicks();
+		while(tiempoFrameFinal<(tiempoFrameInicial+FPS_DELAY))
+			{
+				tiempoFrameFinal=SDL_GetTicks();
+				SDL_Delay(1);
+			}
+
+		printf("Frames:%d Tiempo:%d Tiempo promedio:%f Tiempo por frame:%d FPS:%f\n",tick,SDL_GetTicks(),(float)SDL_GetTicks()/(float)tick,tiempoFrameFinal- tiempoFrameInicial,1000.0f/(float)(tiempoFrameFinal-tiempoFrameInicial));
+		tiempoFrameInicial=tiempoFrameFinal;
 		tick++;
-
-
 	}
 	return true;
 }
 
-bool CGame::EsLimitePantalla(Nave * objeto, int bandera)
+bool CGame::EsLimitePantalla(Objeto * objeto, int bandera)
 {
 	if (bandera&BORDE_IZQUIERDO)
 	if (objeto->ObtenerX()<=0)
@@ -215,55 +206,89 @@ void CGame::MoverEnemigo()
 //
 		for (int i = 0; i < 10; i++)
 		{
-		if(enemigoArreglo[i]->ObtenerPasoActual()==0)
-			if(!EsLimitePantalla(enemigoArreglo[i],BORDE_DERECHO))
-			{
-			enemigoArreglo[i]->Mover(20);//Derecha
-			}
-			else
-			{
-			enemigoArreglo[i]->IncrementarPasoAcutal();
-			//enemigoArreglo[i]->IncrementarPasoAcutal();
-			}
-	if(enemigoArreglo[i]->ObtenerPasoActual()==1)
-		if(!EsLimitePantalla(enemigoArreglo[i],BORDE_INFERIOR))
-			{enemigoArreglo[i]->Mover2(20);}
-		else
-		{
-			enemigoArreglo[i]->IncrementarPasoAcutal();
-		}
-	if(enemigoArreglo[i]->ObtenerPasoActual()==2)
-		if(!EsLimitePantalla(enemigoArreglo[i],BORDE_IZQUIERDO))
-		{	enemigoArreglo[i]->Mover(-20);}
-		else
-		{
-			enemigoArreglo[i]->IncrementarPasoAcutal();
-			//enemigoArreglo[i]->IncrementarPasoAcutal();
-
-		}
-	if(enemigoArreglo[i]->ObtenerPasoActual()==3)
-		if(!EsLimitePantalla(enemigoArreglo[i],BORDE_SUPERIOR))
-		{	enemigoArreglo[i]->Mover2(-20);}
-		else
-		{
-			enemigoArreglo[i]->IncrementarPasoAcutal();
-		}
-
-
+			if(enemigoArreglo[i]->ObtenerPasoActual()==0)
+				if(!EsLimitePantalla(enemigoArreglo[i],BORDE_DERECHO))
+					{
+						enemigoArreglo[i]->Mover(30);//Derecha
+					}
+				else
+					{
+						enemigoArreglo[i]->IncrementarPasoAcutal();
+						//enemigoArreglo[i]->IncrementarPasoAcutal();
+					}
+			if(enemigoArreglo[i]->ObtenerPasoActual()==1)
+				if(!EsLimitePantalla(enemigoArreglo[i],BORDE_INFERIOR))
+					{
+						enemigoArreglo[i]->Mover2(30);
+					}
+				else
+					{
+						enemigoArreglo[i]->IncrementarPasoAcutal();
+					}
+			if(enemigoArreglo[i]->ObtenerPasoActual()==2)
+				if(!EsLimitePantalla(enemigoArreglo[i],BORDE_IZQUIERDO))
+					{	
+						enemigoArreglo[i]->Mover(-30);
+					}
+				else
+					{
+						enemigoArreglo[i]->IncrementarPasoAcutal();
+						//enemigoArreglo[i]->IncrementarPasoAcutal();
+					}
+			if(enemigoArreglo[i]->ObtenerPasoActual()==3)
+				if(!EsLimitePantalla(enemigoArreglo[i],BORDE_SUPERIOR))
+				{	enemigoArreglo[i]->Mover2(-30);}
+				else
+				{
+					enemigoArreglo[i]->IncrementarPasoAcutal();
+				}
 }
 }
 void CGame::Menu()
 {
-	for (int i = MODULO_TEXTOS_MENU_OPCION1, j = 0; i <= MODULO_TEXTOS_MENU_OPCION2; i++, j++)
+	for (int i = MODULO_TEXTOS_MENU_OPCION1,j=0; i <= MODULO_TEXTOS_MENU_OPCION2 ; i++,j++)
 	{
-		if (i == opcionSeleccionada)
-		{
-			texto->Pintar(i + 2, 100, 130 + (j * 50));
-		}
-		else
-		{
-			texto->Pintar(i, 100, 130 + (j * 50));
-		}
+		keys= SDL_GetKeyState(NULL);
 		
+		if(keys[SDLK_UP])	
+		{
+			opcionSeleccionada=MODULO_TEXTOS_MENU_OPCION1;
+		}	
+			
+		if(keys[SDLK_DOWN])
+		{
+			opcionSeleccionada=MODULO_TEXTOS_MENU_OPCION2;
+					
+		}
+		if (i==opcionSeleccionada)
+			{
+				textos->Pintar(i+2,300,180+(j*80));
+			}
+			else
+			{
+				textos->Pintar(i,300,180+(j*80));
+			}
+		/*if (i==opcionSeleccionada)
+			{
+				textos->Pintar(i+2,300,180+(j*80));
+			}
+			else
+			{
+				textos->Pintar(i,300,180+(j*80));
+			}*/
+		if(keys[SDLK_i])
+		{
+			if (opcionSeleccionada==MODULO_TEXTOS_MENU_OPCION1)
+			{
+				estado=ESTADO_JUGANDO;
+			}
+			else
+			{
+				estado=ESTADO_FINALIZANDO;
+			}
+					
+		}
 	}
 }
+
+	

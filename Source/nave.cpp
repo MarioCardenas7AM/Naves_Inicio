@@ -1,90 +1,51 @@
 #include "Nave.h"
+#include <SDL.h>
+#include "Objeto.h"
 #include "Header.h"
 
-Nave::Nave(SDL_Surface * screen,char * rutaImagen,int x, int y, int module)
+Nave::Nave(SDL_Surface * screen,char * rutaImagen,int x,int y,int module)
 {
-	this->module = module;
-	sprite = new Sprite(screen);
-	sprite->CargarImagen(rutaImagen);
-	w = sprite->WidthModule(this->module);
-	h = sprite->HeightModule(this->module);
-	this->x=x;
-	this->y=y;
-	autoMovimiento=false;
-	pasoActual=0;
-	pasoLimite=-1;
+	nave = new Objeto(screen,rutaImagen,x,y,module);
+	bala = new Objeto(screen,"../Data/balas.bmp",0,0,MODULO_BALAS_BALA);
+	bala->SetVisible(false);
 }
 
-void Nave::SetAutoMovimiento(bool autoMovimiento){
-	this->autoMovimiento= autoMovimiento;
-}
-
-void Nave::Actualizar(){
-	if(autoMovimiento)
-	{
-Mover(1);
-	}
-if(pasoLimite>0)
+void Nave::Pintar()
 {
-	//pasoActual++;
-if(pasoActual>=pasoLimite)
-	pasoActual = 0;
-	}
+	nave -> Pintar();
+	bala->Pintar();
+	bala->Mover2(-40);
 }
 
-void Nave:: Pintar()
+void Nave::Disparar()
 {
-	sprite->PintarModulo(module,x,y);
+	bala->SetVisible(true);
+	bala->PonerEn(nave->ObtenerX()+nave->ObtenerW()/2-1,nave->ObtenerY());
+	
+	
 }
 
-void Nave::Pintar(int module, int x, int y)
+void Nave::MoverAbajo()
 {
-	sprite->PintarModulo(module, x, y);
+	nave->Mover2(8);
 }
 
-void Nave::Mover(int posicion){
-	x+=posicion;
-}
-void Nave::Mover2(int posicion){
-	y+=posicion;
-}
-
-int Nave::ObtenerX()
+void Nave::MoverArriba()
 {
-	return x;
+	nave->Mover2(-8);
 }
 
-int Nave::ObtenerY()
+void Nave::MoverDerecha()
 {
-	return y;
+	nave->Mover(8);
 }
 
-int Nave::ObtenerW()
+void Nave::MoverIzquierda()
 {
-	return w;
+	nave->Mover(-8);
 }
 
-int Nave::ObtenerH()
+Objeto* Nave::GetNaveObjeto()
 {
-	return h;
-}
-
-void Nave::SetPasoLimite(int pasos)
-{
-	this->pasoLimite=pasos;
-}
-
-int Nave::ObtenerPasoActual()
-{
-	return pasoActual;
-}
-
-void Nave::IncrementarPasoAcutal()
-{
-	pasoActual++;
-}
-
-bool Nave::EstaColicionando(Nave * b)
-{
-	return false;
+	return nave;
 }
