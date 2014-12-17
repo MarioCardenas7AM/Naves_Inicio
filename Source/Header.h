@@ -21,9 +21,15 @@
 #define MODULO_TEXTOS_MENU_OPCION1_SELECCIONADO  7
 #define MODULO_TEXTOS_MENU_OPCION2_SELECCIONADO  8
 #define MODULO_BALAS_BALA                        9
+#define MODULO_GAME_OVER                         10
+#define MODULO_OPCION_REGRESAR_MENU              11
 
 
 #define FPS_LIMIT 30.0f
 #define FPS_DELAY 1000.0f / FPS_LIMIT
+
+#define MAXIMO_DE_BALAS 30
+#define NAVE_PROPIA 0
+#define NAVE_ENEMIGO 1
 
 #endif

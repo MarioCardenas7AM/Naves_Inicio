@@ -63,5 +63,17 @@ SpriteDef::SpriteDef(){
 	modulos[9].w=5;
 	modulos[9].h=5;
 
+	modulos[10].id = MODULO_GAME_OVER;
+	modulos[10].x = 184;
+	modulos[10].y = 210;
+	modulos[10].w = 318;
+	modulos[10].h = 52;
+
+	modulos[11].id = MODULO_OPCION_REGRESAR_MENU;
+	modulos[11].x = 83;
+	modulos[11].y = 299;
+	modulos[11].w = 522;
+	modulos[11].h = 36;
+
 
 }
