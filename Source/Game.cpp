@@ -16,25 +16,28 @@ CGame::CGame()
 
 	
 
-	//The sound effects that will be used
-	// Mix_Chunk *scratch = NULL;
-	//Mix_Chunk *high = NULL;
-	//Mix_Chunk *med = NULL;
-	//Mix_Chunk *low = NULL;
-	////delete nave;
+
+	
+	//delete nave;
 }
 void CGame::Iniciando(){
+	
 	if (SDL_Init(SDL_INIT_VIDEO)<0)//si regresa 1 el init de video si se activo y regresa -1 si no se pudo iniciar. 
 	{
 		printf("No se pudo iniciar SDL: Error %s\n", SDL_GetError());//
 		exit(EXIT_FAILURE);
 	}
-	//if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
-	//{
-	//	printf("No se pudo iniciar SDL: Sonido %s\n", SDL_GetError());//
-	//	exit(EXIT_FAILURE);
-	//	
-	//}
+
+	/*if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048)<0)
+	{
+		printf("SDL Mixer error %s/n", SDL_GetError());
+	}
+	musica = Mix_LoadMUS("beat.wav");
+	if (musica == NULL)
+	{
+		printf("no se pudo cargar beat.wav %s/n", Mix_GetError());
+	}
+	*/
 	screen= SDL_SetVideoMode(WIDTH_SCREEN, HEIGHT_SCREEN, 24, SDL_HWSURFACE);//(ancho,alto,bpp,bandera)
 	if (screen==NULL)
 	{
@@ -51,8 +54,7 @@ void CGame::Iniciando(){
 	menu= new Objeto(screen,"../Data/menu.bmp",0,0,MODULO_MENU_FONDO);
 	textos=new Objeto(screen,"../Data/textos.bmp",0,0,-1);
 	gameOver = new Objeto(screen, "../Data/gameover.bmp", 0, 0, -1);
-	/*Mix_Music *sound = NULL;
-	sound = Mix_LoadMUS("../Data/musica.mp3");*/
+	
 	
 //	enemigo = new Objeto(screen,"../Data/enemigo.bmp",0,0);
 
@@ -107,7 +109,20 @@ bool CGame::Start()
 			estado = ESTADO_MENU;
 			break;
 		case Estado ::ESTADO_JUGANDO:
-			 
+			/*if (Mix_PlayingMusic() == 0){
+				Mix_PlayingMusic();
+			}
+			else
+			{
+				if (Mix_PausedMusic() == 1){
+					Mix_ResumeMusic();
+				}
+				else
+				{
+					Mix_PauseMusic();
+				}
+			}
+			 */
 		//enemigo->Actualizar();
 			for (int i = 0; i < nivel[nivelActual].NumeroEnemigosVisibles; i++)
 			{

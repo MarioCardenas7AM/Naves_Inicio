@@ -7,6 +7,9 @@
 
 class CGame
 {
+//public:
+//	Mix_Music *musica = NULL;
+//	Mix_Chunk *sonidoBalas = NULL;
 public:
 	enum Estado{
 		ESTADO_INICIANDO,
@@ -19,6 +22,7 @@ public:
 
 	bool Start();
 	static CGame instanceGame;
+	
 
 	CGame();
 	void Finalize();
