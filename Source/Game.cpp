@@ -104,7 +104,7 @@ bool CGame::Start()
 			nivelActual = 0;
 			vida = 1;
 			enemigosEliminados = 0;
-			estado = ESTADO_JUGANDO;
+			estado = ESTADO_MENU;
 			break;
 		case Estado ::ESTADO_JUGANDO:
 			 

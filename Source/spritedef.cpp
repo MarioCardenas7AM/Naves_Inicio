@@ -22,16 +22,16 @@ SpriteDef::SpriteDef(){
 	
 	
 	modulos[3].id=MODULO_TEXTOS_TITULO;//Titulo
-	modulos[3].x=300;
-	modulos[3].y=100;
-	modulos[3].w=500;
-	modulos[3].h=100;
+	modulos[3].x=49;
+	modulos[3].y=2;
+	modulos[3].w = 307;
+	modulos[3].h=61;
 
 	modulos[4].id=MODULO_TEXTOS_NOMBRE;//Nombre Anio
-	modulos[4].x=300;
-	modulos[4].y=100;
-	modulos[4].w=307;
-	modulos[4].h=61;
+	modulos[4].x=9;
+	modulos[4].y=126;
+	modulos[4].w=179;
+	modulos[4].h=29;
 
 	modulos[5].id=MODULO_TEXTOS_MENU_OPCION1;//Iniciar
 	modulos[5].x=188;
